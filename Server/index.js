@@ -20,7 +20,7 @@ mongoose.connect(dbUrl)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(5000, () => {
-      console.log("Listening on port 5000");
+      // console.log("Listening on port 5000");
     });
   })
   .catch(err => {
