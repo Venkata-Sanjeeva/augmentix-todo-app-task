@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "name": "augmentix-todo-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "concurrently \"npm run start:todoApp\" \"npm run start:server\"",
+    "start:todoApp": "npm start --prefix todoApp",
+    "start:server": "npm start --prefix server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
