@@ -1,0 +1,120 @@
+=> install package.json file in both server and client side folders, it will useful when you are working with fullstack projects
+
+Important Note:-
+==========================================================================================================================================
+    => to develop a complete fullstack project use separate folders for server-side development and client-side(front-end) development
+    => these both folders must have package.json files individually to maintain them concurrently running at the same timestamps
+    => while developing the fullstack projects like this make sure to use CORS(Cross Origin Resource Sharing) is used in your project, which is "npm install cors" in the server side
+    => app.use(cors({origin: 'http://localhost:3000',  // Allow requests from this origin
+        methods: 'GET,POST,PUT,DELETE',
+        credentials: true
+        }));
+    => in the server side package.json make sure to have these things to establish or to connect with the front end also  
+        =>  "scripts": {
+                ...,
+                "start": "node mainServer.js",
+                "dev": "nodemon mainServer"
+            },
+            "devDependencies": {
+                "nodemon": "^3.1.4" // npm install nodemon -D
+            },
+            "dependencies": {
+                "cors": "^2.8.5", // npm install cors
+                "express": "^4.19.2", // npm install express
+                "mongoose": "^8.6.0" // npm install mongoose
+            }
+    => in the client side package.json make sure to have these things to establish or to connect with the server side
+        => "proxy": "http://localhost:5000",
+    
+    => to run your fullstack project after completing above all essential steps
+        => split your terminal into two, one is work with server folder and the other one with front-end folder
+            => inside of server side folder run this cmd "npm run dev"
+            => inside of your front-end folder run this cmd "npm start"
+
+
+Steps to develop fullstack project:-
+-----------------------------------------------------------------------------------------
+1. Install express in your project using npm install express
+2. then import express into your file using require() method
+3. noe to use any of the express features assign it to an app variable like this app = express();, so that we are able to perform any operations with the server
+4. now add an eventlistener which is listen which need to pass a port number to particullarly listen to it, when ever we make a change in the url it listens to it (app.listen(3000))
+5. then use request methods to perform whatever the operations we required and send a response back to the server using res.send() and also end the sending response using res.end()
+6. to upload any data into the server we must create a database in the mongodb and also install mongoose in your project using (npm install mongoose)
+7. then after installing mongoose create a schema which is a structure of your data
+
+    -> to create a schema use this (mongoose.Schema)
+
+    -> the schema instructions follows like this 
+        
+        -> Task Schema 
+            -> title: { type: String, required: true}
+            -> completionDate: { type: String, required: true}
+
+        -> after creating a schema is looks like this
+            -> const taskSchema = new Schema({
+                title: {
+                    type: String,
+                    required: true
+                },
+                completionDate: {
+                    type: String,
+                    required: true
+                }
+            }, { timestamps: true })
+
+        -> (const Task = mongoose.model("Task", taskSchema);) using this line is needed to search in the database like we just previously created the tasks collection in the db
+
+        -> the passing argument is type correctly because it adds plural form of the word and it search for it in the DB
+
+        -> now export the created schema so that we can use this (module.exports = Task)
+
+8. After creating the schema, now connect to the database in the server file using DataBase Url which is (mongodb+srv://kuntumallavenkatasanjeeva2005:Sanjeeva%40123@nodetuts.gzjrr.mongodb.net/augmentixtodoapp?retryWrites=true&w=majority&appName=nodetuts)
+    -> then using mongoose connect to the server (mongoose.connect(dbURL)) also remember it is a async function so use then method to perform operations b/w connecting to the server like log "Connected to DataBase!"
+
+9. Now use requests to make CRUD operations to perform on the database
+
+    ->  // get all tasks from database
+        app.get("/alltasks", (req, res) => {
+            Task.find().then(result => {
+                res.send(result);
+                res.end();
+            })
+        })
+
+    ->  // upload task to database
+        app.get("/upload/task", (req, res) => {
+            const task = new Task({
+                title: "Complete TODO1",
+                completionDate: "31-09-2024"
+            });
+
+            task.save().then(result => {
+                res.send("Task Uploaded Succefully!");
+                res.end(); 
+            })
+        })
+
+    ->  // delete task to database
+
+        app.get("/task/delete/:id", (req, res) => {
+            const id = req.params.id;
+
+            Task.findByIdAndDelete(id).then(result => {
+                res.send("Task Deleted Successfully!")
+            })
+        })
+    
+10. Now make front end part using react
+    -> create all the required components to your project Like Header Body Footer
+    -> in the body component 
+        -> make a form which will send an action to your particular url with the method POST
+        -> now the backend server will make the requested operation and then redirects it to "/"
+    -> in the body component we are rendering the current tasks or previous tasks which are declared in the past using tasklist component
+    -> in the tasklist component
+        -> use axios to fetch the data from the desired url to obtain all the data and then set the responded data to a react hook where we will use the react hook state variable to make conditional rendering
+        -> while designing the tasklist part of the code give a dataset attribute as taskid as the value which we will use it in the deleting operation to delete particular task
+    -> now make a delete operation in the same component as a function to work with
+        -> firstly add a onclick event to the button and pass a function named deleteFunction and pass taskid as the parameter to that function
+        -> then in the deleteFunction select the entire task using a DOM selector like getElementById which is a taskId an unique one 
+        -> then send a axios delete request to the server with the url of "/task/delete/${deleteBtn.dataset.taskId}" and in the server side the express ap will done the desired operation and give you a respond to redirect to the alltasks url, getting this url put it on the window.location.href to display the new list of tasks after deleting the task
+
