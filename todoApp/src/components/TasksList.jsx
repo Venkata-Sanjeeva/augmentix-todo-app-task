@@ -59,7 +59,7 @@ export default function TasksList() {
   }
   
   function taskCompleted(taskId) {
-    axios.put(`/update/task/${taskId}`, { isCompleted: true })
+    axios.put(`https://mern-todo-app-ul21.onrender.com/update/task/${taskId}`, { isCompleted: true })
       .then(response => {
         window.location.href = response.data.redirect; 
       })
@@ -67,7 +67,7 @@ export default function TasksList() {
   }
   
   function deleteFunction(taskId) {
-    const endPoint = `/task/delete/${taskId}`;
+    const endPoint = `https://mern-todo-app-ul21.onrender.com/task/delete/${taskId}`;
     
     axios.delete(endPoint)
       .then(response => {
